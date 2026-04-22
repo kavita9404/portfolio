@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavita — UI/UX Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f3;
+  --bg2: #f2ede2;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --ink: #1a1612;
+  --ink2: #3d3530;
+  --muted: #9a8f84;
+  --muted2: #6e6257;
+  --coral: #e8533a;
+  --coral-dim: rgba(232,83,58,0.1);
+  --sage: #5a7a65;
+  --sage-dim: rgba(90,122,101,0.1);
+  --gold: #c8922a;
+  --gold-dim: rgba(200,146,42,0.1);
+  --sand: #e8dcc8;
+  --serif: 'Playfair Display', serif;
+  --sans: 'Syne', sans-serif;
+  --mono: 'Syne Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;overflow-x:hidden;cursor:none}
+a{text-decoration:none;color:inherit}
+
+/* CURSOR */
+#cur-o{position:fixed;width:36px;height:36px;border:1.5px solid rgba(232,83,58,0.4);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s,border-color .2s,background .2s}
+#cur-d{position:fixed;width:5px;height:5px;background:var(--coral);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+body.ch #cur-o{width:52px;height:52px;background:rgba(232,83,58,0.06);border-color:var(--coral)}
+
+/* PAPER TEXTURE */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3.5rem;background:rgba(250,248,243,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);transition:padding .3s}
+nav.sc{padding:.75rem 3.5rem}
+.nav-logo{font-family:var(--mono);font-size:11px;color:var(--coral);letter-spacing:.2em;text-transform:uppercase}
+.nav-links{display:flex;gap:.1rem;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:10.5px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase;padding:.4rem .9rem;border-radius:2px;transition:color .2s,background .2s}
+.nav-links a:hover{color:var(--coral);background:var(--coral-dim)}
+.nav-cta{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:.42rem 1.1rem;border:1.5px solid var(--coral);color:var(--coral);border-radius:2px;transition:all .2s}
+.nav-cta:hover{background:var(--coral);color:#fff}
+
+/* HERO */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;padding-top:5rem}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:5rem 3.5rem 5rem 3.5rem;position:relative;z-index:1}
+.hero-right{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-bg-shape{position:absolute;top:-10%;right:-5%;width:85%;height:110%;background:var(--sand);clip-path:polygon(12% 0%, 100% 0%, 100% 100%, 0% 100%);z-index:0}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(232,83,58,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(232,83,58,.05) 1px,transparent 1px);background-size:40px 40px;z-index:1}
+.hero-center-text{position:relative;z-index:2;text-align:center;padding:3rem}
+.hbadge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:10px;color:var(--coral);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1.8rem;opacity:0;animation:fu .6s ease .1s forwards}
+.hbadge::before{content:'';width:5px;height:5px;background:var(--coral);border-radius:50%;animation:bl 2s ease infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
+.hname{font-family:var(--serif);font-size:clamp(4.5rem,10vw,8rem);line-height:.9;letter-spacing:-.01em;opacity:0;animation:fu .8s ease .3s forwards}
+.hname .block{display:block}
+.hname .it{font-style:italic;color:var(--coral)}
+.hdiv{width:60px;height:1.5px;background:var(--coral);margin:2rem 0;opacity:0;animation:fu .6s ease .55s forwards}
+.hdesc{font-size:14px;color:var(--muted2);line-height:1.85;max-width:360px;margin-bottom:2.5rem;opacity:0;animation:fu .6s ease .65s forwards}
+.hdesc strong{color:var(--ink);font-weight:600}
+.hctas{display:flex;gap:.75rem;flex-wrap:wrap;opacity:0;animation:fu .6s ease .75s forwards}
+.hscroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:.6rem;opacity:0;animation:fu .6s ease 1.1s forwards}
+.hscroll::after{content:'';width:1px;height:44px;background:linear-gradient(var(--coral),transparent);margin-top:.2rem}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* floating design tokens in hero right */
+.token{position:absolute;font-family:var(--mono);font-size:9.5px;color:var(--muted2);letter-spacing:.08em;border:1px solid var(--border2);background:rgba(255,255,255,.7);backdrop-filter:blur(4px);padding:.4rem .8rem;border-radius:3px;z-index:3;animation:tok 6s ease-in-out infinite}
+.t1{top:18%;left:8%;animation-delay:0s}
+.t2{top:35%;right:6%;animation-delay:1.5s}
+.t3{bottom:30%;left:5%;animation-delay:3s}
+.t4{bottom:18%;right:10%;animation-delay:2s}
+@keyframes tok{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.hero-diagram{position:relative;z-index:2;width:220px;height:220px}
+.hd-ring{position:absolute;border-radius:50%;border:1px solid rgba(232,83,58,.25)}
+.r1{inset:0;animation:spin 20s linear infinite}
+.r2{inset:22px;animation:spin 14s linear infinite reverse}
+.r3{inset:44px;background:rgba(232,83,58,.06);display:flex;align-items:center;justify-content:center}
+.hd-center{font-family:var(--serif);font-style:italic;font-size:1.1rem;color:var(--coral);text-align:center}
+.hd-dot{position:absolute;width:7px;height:7px;background:var(--coral);border-radius:50%;top:0;left:50%;transform:translate(-50%,-50%)}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* BTN */
+.btn{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:.55rem 1.3rem;border-radius:2px;transition:all .22s;display:inline-flex;align-items:center;gap:.4rem}
+.btn-primary{background:var(--coral);color:#fff;border:1.5px solid var(--coral)}
+.btn-primary:hover{background:transparent;color:var(--coral)}
+.btn-outline{border:1.5px solid var(--border2);color:var(--ink2)}
+.btn-outline:hover{border-color:var(--coral);color:var(--coral)}
+
+/* SECTIONS */
+.sw{max-width:1100px;margin:0 auto;padding:7rem 3.5rem;position:relative;z-index:1}
+.sec-divider{height:1px;background:var(--border);max-width:1100px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:9.5px;color:var(--coral);letter-spacing:.28em;text-transform:uppercase;margin-bottom:.6rem;display:flex;align-items:center;gap:.8rem}
+.eyebrow .ln{width:28px;height:1px;background:var(--coral)}
+.stitle{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,3.4rem);line-height:1.05;margin-bottom:3.5rem;color:var(--ink)}
+
+/* PROCESS SECTION */
+.process-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.process-grid::after{content:'';position:absolute;top:28px;left:calc(10%);right:calc(10%);height:1px;background:repeating-linear-gradient(90deg,var(--coral) 0,var(--coral) 6px,transparent 6px,transparent 14px);z-index:0}
+.pstep{text-align:center;padding:0 .5rem;position:relative;z-index:1}
+.pstep-num{width:56px;height:56px;border-radius:50%;background:var(--bg);border:1.5px solid var(--coral);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--coral);margin:0 auto 1.2rem;transition:all .25s}
+.pstep:hover .pstep-num{background:var(--coral);color:#fff}
+.pstep-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem}
+.pstep-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* SKILLS */
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+.skill-cat{background:var(--surface);border:1px solid var(--border);padding:2rem;border-radius:3px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.skill-cat::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--coral)}
+.skill-cat:nth-child(2)::before{background:var(--sage)}
+.skill-cat:nth-child(3)::before{background:var(--gold)}
+.skill-cat:nth-child(4)::before{background:var(--ink2)}
+.skill-cat:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.07)}
+.sc-icon{font-size:1.6rem;margin-bottom:.9rem}
+.sc-name{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin-bottom:.9rem}
+.skill-cat:nth-child(2) .sc-name{color:var(--sage)}
+.skill-cat:nth-child(3) .sc-name{color:var(--gold)}
+.skill-cat:nth-child(4) .sc-name{color:var(--ink2)}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag{font-family:var(--mono);font-size:10.5px;padding:.25rem .65rem;background:var(--bg);border:1px solid var(--border2);border-radius:2px;color:var(--muted2);transition:all .15s;cursor:default}
+.tag:hover{border-color:var(--coral);color:var(--coral)}
+.skill-cat:nth-child(2) .tag:hover{border-color:var(--sage);color:var(--sage)}
+.skill-cat:nth-child(3) .tag:hover{border-color:var(--gold);color:var(--gold)}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:1fr;gap:0}
+.proj-item{display:grid;grid-template-columns:72px 1fr auto;gap:0;padding:2.5rem 0;border-bottom:1px solid var(--border);align-items:start;cursor:none;position:relative;transition:background .2s}
+.proj-item:first-child{border-top:1px solid var(--border)}
+.proj-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--coral);transform:scaleY(0);transition:transform .25s;transform-origin:top}
+.proj-item:nth-child(2)::before{background:var(--sage)}
+.proj-item:nth-child(3)::before{background:var(--gold)}
+.proj-item:hover{background:rgba(0,0,0,.015)}
+.proj-item:hover::before{transform:scaleY(1)}
+.proj-num{font-family:var(--mono);font-size:10.5px;color:var(--muted);padding-top:.25rem}
+.proj-body{padding-right:2rem}
+.proj-type{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin-bottom:.5rem}
+.proj-item:nth-child(2) .proj-type{color:var(--sage)}
+.proj-item:nth-child(3) .proj-type{color:var(--gold)}
+.proj-title{font-family:var(--serif);font-size:1.65rem;line-height:1.1;margin-bottom:.85rem;transition:color .2s}
+.proj-item:hover .proj-title{color:var(--coral)}
+.proj-item:nth-child(2):hover .proj-title{color:var(--sage)}
+.proj-item:nth-child(3):hover .proj-title{color:var(--gold)}
+.proj-desc{font-size:13.5px;color:var(--muted2);line-height:1.8;max-width:580px;margin-bottom:1.1rem}
+.ux-insight{display:flex;align-items:flex-start;gap:.6rem;background:var(--coral-dim);border-left:2px solid var(--coral);padding:.65rem .9rem;border-radius:0 2px 2px 0;font-size:12px;color:var(--coral);margin-bottom:1rem}
+.proj-item:nth-child(2) .ux-insight{background:var(--sage-dim);border-color:var(--sage);color:var(--sage)}
+.proj-item:nth-child(3) .ux-insight{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.ux-insight-label{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;white-space:nowrap;margin-right:.2rem}
+.pstack{display:flex;flex-wrap:wrap;gap:.3rem}
+.ptag{font-family:var(--mono);font-size:9.5px;padding:.18rem .5rem;border:1px solid var(--border);border-radius:2px;color:var(--muted)}
+.proj-arrow{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1.5px solid var(--border2);border-radius:50%;color:var(--muted);font-size:1rem;flex-shrink:0;transition:all .25s;text-decoration:none;margin-top:.2rem;align-self:flex-start}
+.proj-item:hover .proj-arrow{border-color:var(--coral);color:var(--coral);background:var(--coral-dim);transform:translate(3px,-3px)}
+.proj-item:nth-child(2):hover .proj-arrow{border-color:var(--sage);color:var(--sage);background:var(--sage-dim)}
+.proj-item:nth-child(3):hover .proj-arrow{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+
+/* EXPERIENCE */
+.exp-timeline{border-left:1.5px solid var(--border);padding-left:2.5rem;margin-left:80px;position:relative}
+.exp-row{position:relative;padding:2rem 0}
+.exp-row::before{content:'';position:absolute;left:-2.5rem;top:2.2rem;width:8px;height:8px;border-radius:50%;background:var(--coral);transform:translateX(-4px);border:2px solid var(--bg)}
+.exp-year{position:absolute;left:-7rem;top:2rem;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-align:right;width:4rem}
+.exp-role{font-family:var(--serif);font-size:1.25rem;margin-bottom:.25rem}
+.exp-org{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--coral);margin-bottom:.7rem}
+.exp-info{font-size:13.5px;color:var(--muted2);line-height:1.8;max-width:580px}
+.exp-tools{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.7rem}
+.exp-tool{font-family:var(--mono);font-size:10px;padding:.18rem .55rem;border:1px solid var(--border2);border-radius:2px;color:var(--muted)}
+
+/* ACHIEVEMENTS */
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:3rem}
+.ach-card{background:var(--surface);border:1px solid var(--border);padding:2rem 1.5rem;border-radius:3px;text-align:center;transition:all .25s;position:relative;overflow:hidden}
+.ach-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--coral);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.ach-card:nth-child(2)::after{background:var(--sage)}
+.ach-card:nth-child(3)::after{background:var(--gold)}
+.ach-card:nth-child(4)::after{background:var(--ink2)}
+.ach-card:hover{transform:translateY(-4px);box-shadow:0 14px 44px rgba(0,0,0,.07)}
+.ach-card:hover::after{transform:scaleX(1)}
+.ach-num{font-family:var(--serif);font-size:3rem;font-weight:700;color:var(--coral);line-height:1;margin-bottom:.5rem}
+.ach-card:nth-child(2) .ach-num{color:var(--sage)}
+.ach-card:nth-child(3) .ach-num{color:var(--gold)}
+.ach-card:nth-child(4) .ach-num{color:var(--ink2)}
+.ach-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.certs{display:flex;flex-direction:column;gap:1rem}
+.cert{display:flex;align-items:center;gap:1.5rem;background:var(--surface);border:1px solid var(--border);padding:1.25rem 1.75rem;border-radius:3px;transition:all .25s}
+.cert:hover{border-color:var(--coral);transform:translateX(4px)}
+.cert-badge{font-size:1.5rem}
+.cert-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:.2rem}
+.cert-sub{font-family:var(--mono);font-size:9.5px;color:var(--coral);letter-spacing:.1em}
+.cert-arr{margin-left:auto;font-size:.9rem;color:var(--muted);transition:color .2s;transform:translateX(0);transition:transform .25s}
+.cert:hover .cert-arr{color:var(--coral);transform:translateX(4px)}
+
+/* EDUCATION */
+.edu-list{display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.edu-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface);padding:1.5rem 2rem;transition:background .2s}
+.edu-item:hover{background:var(--bg2)}
+.edu-deg{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:.2rem}
+.edu-org{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted2)}
+.edu-yr{font-family:var(--serif);font-style:italic;font-size:1.4rem;color:var(--coral)}
+
+/* CONTACT */
+#contact-wrap{background:var(--sand);padding:7rem 3.5rem;position:relative;overflow:hidden;z-index:1}
+.contact-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.contact-big{font-family:var(--serif);font-size:clamp(2.8rem,6vw,5rem);line-height:.95;margin-bottom:2rem}
+.contact-big em{font-style:italic;color:var(--coral)}
+.contact-info{font-size:14px;color:var(--muted2);line-height:1.85;margin-bottom:2.5rem}
+.contact-links{display:flex;flex-direction:column;gap:1rem}
+.clink{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:3px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2);transition:all .22s}
+.clink:hover{border-color:var(--coral);color:var(--coral);background:rgba(255,255,255,.9);transform:translateX(4px)}
+.clink-icon{font-size:1rem;width:24px;text-align:center}
+.contact-decoration{position:relative;display:flex;align-items:center;justify-content:center}
+.cd-big{font-family:var(--serif);font-style:italic;font-size:clamp(7rem,14vw,11rem);color:rgba(232,83,58,.08);line-height:1;text-align:center;user-select:none}
+.cd-tagline{position:absolute;text-align:center}
+.cd-tagline p{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem}
+.cd-tagline .big{font-family:var(--serif);font-style:italic;font-size:2rem;color:var(--coral)}
+.cb-orb{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(232,83,58,.08) 0%,transparent 70%);right:-80px;top:-80px;pointer-events:none}
+.cb-orb2{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(90,122,101,.07) 0%,transparent 70%);left:-40px;bottom:-40px;pointer-events:none}
+
+/* FOOTER */
+footer{background:var(--ink);color:rgba(255,255,255,.35);text-align:center;padding:1.5rem;font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase}
+footer span{margin:0 1rem}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.1s}
+.rv.d2{transition-delay:.2s}
+.rv.d3{transition-delay:.3s}
+.rv.d4{transition-delay:.4s}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  #hero{grid-template-columns:1fr;min-height:auto}
+  .hero-right{display:none}
+  .hero-left{padding:8rem 2rem 5rem}
+  nav{padding:1rem 2rem}
+  .sw{padding:5rem 2rem}
+  .sgrid,.skills-layout{grid-template-columns:1fr 1fr}
+  .ach-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-inner{grid-template-columns:1fr}
+  .contact-decoration{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cur-o"></div>
+<div id="cur-d"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <span class="nav-logo">Kavita · UX</span>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:kavita.ug22@nsut.ac.in" class="nav-cta btn">Hire me ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="hbadge">Available for opportunities</p>
+    <h1 class="hname">
+      <span class="block">UI/UX</span>
+      <span class="block it">Designer</span>
+      <span class="block">& Developer</span>
+    </h1>
+    <div class="hdiv"></div>
+    <p class="hdesc">
+      I'm <strong>Kavita</strong> — a CSE student at NSUT bridging the gap between <strong>user empathy</strong> and <strong>technical feasibility</strong>. I design interfaces that make complex things feel simple.
+    </p>
+    <div class="hctas">
+      <a href="https://github.com/kavita9404" target="_blank" rel="noopener" class="btn btn-outline">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/kavita-/" target="_blank" rel="noopener" class="btn btn-outline">LinkedIn ↗</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-grid"></div>
+    <div class="token t1">font-size: 14px</div>
+    <div class="token t2">border-radius: 4px</div>
+    <div class="token t3">color: #e8533a</div>
+    <div class="token t4">padding: 1.2rem</div>
+    <div class="hero-diagram">
+      <div class="hd-ring r1"><div class="hd-dot"></div></div>
+      <div class="hd-ring r2"></div>
+      <div class="hd-ring r3">
+        <div class="hd-center">User<br>first.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hscroll">Scroll to explore</div>
+</section>
+
+<!-- PROCESS -->
+<div class="sec-divider"></div>
+<div class="sw" id="process">
+  <p class="eyebrow rv"><span class="ln"></span>My Design Philosophy</p>
+  <h2 class="stitle rv">How I work</h2>
+  <div class="process-grid">
+    <div class="pstep rv d1">
+      <div class="pstep-num">1</div>
+      <div class="pstep-label">Empathise</div>
+      <div class="pstep-desc">Understand user goals, pain points & context through research</div>
+    </div>
+    <div class="pstep rv d2">
+      <div class="pstep-num">2</div>
+      <div class="pstep-label">Define</div>
+      <div class="pstep-desc">Translate research into clear problem statements & user flows</div>
+    </div>
+    <div class="pstep rv d3">
+      <div class="pstep-num">3</div>
+      <div class="pstep-label">Ideate</div>
+      <div class="pstep-desc">Sketch multiple directions, exploring edge cases early</div>
+    </div>
+    <div class="pstep rv d4">
+      <div class="pstep-num">4</div>
+      <div class="pstep-label">Prototype</div>
+      <div class="pstep-desc">Build high-fidelity mockups in Figma with real interactions</div>
+    </div>
+    <div class="pstep rv" style="transition-delay:.5s">
+      <div class="pstep-num">5</div>
+      <div class="pstep-label">Test & Iterate</div>
+      <div class="pstep-desc">Validate with users; measure, learn, refine continuously</div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="sec-divider"></div>
+<div class="sw" id="skills">
+  <p class="eyebrow rv"><span class="ln"></span>Capabilities</p>
+  <h2 class="stitle rv">Toolkit & Skills</h2>
+  <div class="skills-layout">
+    <div class="skill-cat rv d1">
+      <div class="sc-icon">✦</div>
+      <div class="sc-name">Design Tools</div>
+      <div class="tags">
+        <span class="tag">Figma</span>
+        <span class="tag">Adobe XD</span>
+        <span class="tag">Adobe Photoshop</span>
+        <span class="tag">Canva</span>
+        <span class="tag">Prototyping</span>
+        <span class="tag">Auto Layout</span>
+        <span class="tag">Component Libraries</span>
+      </div>
+    </div>
+    <div class="skill-cat rv d2">
+      <div class="sc-icon">◎</div>
+      <div class="sc-name">UX Methods</div>
+      <div class="tags">
+        <span class="tag">User Research</span>
+        <span class="tag">Usability Testing</span>
+        <span class="tag">User Flows</span>
+        <span class="tag">Wireframing</span>
+        <span class="tag">Information Architecture</span>
+        <span class="tag">Accessibility</span>
+        <span class="tag">Heuristic Evaluation</span>
+      </div>
+    </div>
+    <div class="skill-cat rv d3">
+      <div class="sc-icon">⟐</div>
+      <div class="sc-name">Frontend Dev</div>
+      <div class="tags">
+        <span class="tag">HTML & CSS</span>
+        <span class="tag">React</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">Next.js</span>
+        <span class="tag">FastAPI</span>
+        <span class="tag">REST APIs</span>
+        <span class="tag">Responsive Design</span>
+      </div>
+    </div>
+    <div class="skill-cat rv d4">
+      <div class="sc-icon">◈</div>
+      <div class="sc-name">Visual & Brand</div>
+      <div class="tags">
+        <span class="tag">Typography</span>
+        <span class="tag">Color Theory</span>
+        <span class="tag">Design Systems</span>
+        <span class="tag">Social Media Design</span>
+        <span class="tag">Campaign Collateral</span>
+        <span class="tag">Poster Design</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="sec-divider"></div>
+<div class="sw" id="projects">
+  <p class="eyebrow rv"><span class="ln"></span>Selected Work</p>
+  <h2 class="stitle rv">Projects with UX intent</h2>
+  <div class="proj-grid">
+
+    <!-- Project 1 -->
+    <div class="proj-item rv" onclick="window.open('https://github.com/kavita9404/AI_agent_csvreader','_blank')">
+      <div class="proj-num">01</div>
+      <div class="proj-body">
+        <div class="proj-type">AI Interface Design · Full Stack</div>
+        <h3 class="proj-title">AI Agent for CSV Analysis</h3>
+        <p class="proj-desc">Designed an end-to-end interface for a natural language data analysis tool. The core challenge was making AI-powered insights accessible to non-technical users — file upload, NL query input, and data visualization all in one cohesive flow.</p>
+        <div class="ux-insight"><span class="ux-insight-label">UX Outcome →</span> Reduced cognitive load for non-technical users by ~70% through progressive disclosure and plain-language interactions.</div>
+        <div class="pstack">
+          <span class="ptag">Figma</span><span class="ptag">Next.js</span><span class="ptag">Tailwind CSS</span><span class="ptag">FastAPI</span><span class="ptag">Langchain</span><span class="ptag">Gemini API</span>
+        </div>
+      </div>
+      <a href="https://github.com/kavita9404/AI_agent_csvreader" target="_blank" rel="noopener" class="proj-arrow" onclick="event.stopPropagation()">↗</a>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="proj-item rv" onclick="window.open('https://github.com/kavita9404/BEST_SPOT','_blank')">
+      <div class="proj-num">02</div>
+      <div class="proj-body">
+        <div class="proj-type">Data Visualization · UX Strategy</div>
+        <h3 class="proj-title">BEST_SPOT — Business Location Finder</h3>
+        <p class="proj-desc">Designed the complete user flow for a geospatial ML application that finds the most suitable place in a city to open a commercial establishment (Malls, Restaurants, Hotels) using Foursquare API data. Selecting a business type → visualizing k-means clusters → interpreting AI recommendations.</p>
+        <div class="ux-insight"><span class="ux-insight-label">UX Insight →</span> Translated complex ML cluster outputs into a 3-step decision flow that business users could act on without technical knowledge.</div>
+        <div class="pstack">
+          <span class="ptag">Folium</span><span class="ptag">K-Means Clustering</span><span class="ptag">Foursquare API</span><span class="ptag">User Flow Design</span><span class="ptag">Data Vis</span>
+        </div>
+      </div>
+      <a href="https://github.com/kavita9404/BEST_SPOT" target="_blank" rel="noopener" class="proj-arrow" onclick="event.stopPropagation()">↗</a>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="proj-item rv" style="cursor:default">
+      <div class="proj-num">03</div>
+      <div class="proj-body">
+        <div class="proj-type">NGO · Graphic Design · Brand Communication</div>
+        <h3 class="proj-title">Social Impact Design — NGO Internship</h3>
+        <p class="proj-desc">Created 25+ high-impact social media creatives, event posters, and campaign materials for NGO initiatives. Worked closely with marketing and event coordination teams to translate messaging into visually compelling, audience-appropriate assets.</p>
+        <div class="ux-insight"><span class="ux-insight-label">Impact →</span> Drove measurable audience engagement uplift across NGO campaigns through emotionally resonant visual storytelling.</div>
+        <div class="pstack">
+          <span class="ptag">Canva</span><span class="ptag">Adobe Photoshop</span><span class="ptag">Figma</span><span class="ptag">Social Media Design</span><span class="ptag">Brand Collateral</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="sec-divider"></div>
+<div class="sw" id="experience">
+  <p class="eyebrow rv"><span class="ln"></span>Work Experience</p>
+  <h2 class="stitle rv">Where I've contributed</h2>
+  <div class="exp-timeline">
+    <div class="exp-row rv">
+      <div class="exp-year">2024</div>
+      <div class="exp-role">Graphic Designer Intern</div>
+      <div class="exp-org">iNamigos</div>
+      <p class="exp-info">Designed 25+ high-impact social media creatives, posters, and campaign collateral for NGO initiatives. Collaborated with cross-functional teams — marketing and event coordinators — to translate messaging into visually compelling assets across digital and print channels.</p>
+      <div class="exp-tools">
+        <span class="exp-tool">Canva</span>
+        <span class="exp-tool">Adobe Photoshop</span>
+        <span class="exp-tool">Figma</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERSHIP -->
+<div class="sec-divider"></div>
+<div class="sw" id="leadership">
+  <p class="eyebrow rv"><span class="ln"></span>Positions of Responsibility</p>
+  <h2 class="stitle rv">Leadership & Roles</h2>
+  <div class="exp-timeline">
+    <div class="exp-row rv">
+      <div class="exp-year">Jan–May 2025</div>
+      <div class="exp-role">Team Lead — Computing Tools Workshop</div>
+      <div class="exp-org">NSUT</div>
+      <p class="exp-info">Led a cross-functional team building Machine Learning and Power BI solutions. Oversaw task allocation, design decisions, and presentation of data visualizations. Ensuring outputs were understandable and visually clear was a key part of the role.</p>
+      <div class="exp-tools">
+        <span class="exp-tool">Power BI</span>
+        <span class="exp-tool">Data Visualization</span>
+        <span class="exp-tool">Team Leadership</span>
+      </div>
+    </div>
+    <div class="exp-row rv">
+      <div class="exp-year">Ongoing</div>
+      <div class="exp-role">Creativity Head</div>
+      <div class="exp-org">Aagaaz — The Poetic Society, NSUT</div>
+      <p class="exp-info">Led creative direction for event branding, posters, and digital presence of the university's literary society. Drove cross-team collaboration and brought a design-first lens to every campaign and event.</p>
+      <div class="exp-tools">
+        <span class="exp-tool">Event Design</span>
+        <span class="exp-tool">Brand Identity</span>
+        <span class="exp-tool">Creative Direction</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="sec-divider"></div>
+<div class="sw" id="achievements">
+  <p class="eyebrow rv"><span class="ln"></span>Recognition</p>
+  <h2 class="stitle rv">By the numbers</h2>
+  <div class="ach-grid">
+    <div class="ach-card rv d1"><div class="ach-num">25+</div><div class="ach-lbl">Design assets<br>created</div></div>
+    <div class="ach-card rv d2"><div class="ach-num">~70%</div><div class="ach-lbl">UX efficiency<br>improvement</div></div>
+    <div class="ach-card rv d3"><div class="ach-num">2×</div><div class="ach-lbl">HackerRank<br>certified</div></div>
+    <div class="ach-card rv d4"><div class="ach-num">350+</div><div class="ach-lbl">DSA problems<br>solved</div></div>
+  </div>
+  <div class="certs rv">
+    <a href="#" class="cert">
+      <div class="cert-badge">🏅</div>
+      <div><div class="cert-title">HackerRank Certified Software Engineer</div><div class="cert-sub">View certificate ↗</div></div>
+      <span class="cert-arr">→</span>
+    </a>
+    <a href="#" class="cert">
+      <div class="cert-badge">🎖️</div>
+      <div><div class="cert-title">HackerRank Certified Software Engineer Intern</div><div class="cert-sub">View certificate ↗</div></div>
+      <span class="cert-arr">→</span>
+    </a>
+    <a href="#" class="cert">
+      <div class="cert-badge">🎨</div>
+      <div><div class="cert-title">Graphic Designer Internship Certificate</div><div class="cert-sub">View certificate ↗</div></div>
+      <span class="cert-arr">→</span>
+    </a>
+  </div>
+</div>
+
+<!-- EDUCATION -->
+<div class="sec-divider"></div>
+<div class="sw" id="education">
+  <p class="eyebrow rv"><span class="ln"></span>Education</p>
+  <h2 class="stitle rv">Academic background</h2>
+  <div class="edu-list rv">
+    <div class="edu-item">
+      <div><div class="edu-deg">B.Tech — Computer Science & Engineering</div><div class="edu-org">Netaji Subhas University of Technology (NSUT), Noida</div></div>
+      <div class="edu-yr">2026</div>
+    </div>
+    <div class="edu-item">
+      <div><div class="edu-deg">Class XII — CBSE Board</div><div class="edu-org">Kendriya Vidyalaya Sec-12, Dwarka</div></div>
+      <div class="edu-yr">2022</div>
+    </div>
+    <div class="edu-item">
+      <div><div class="edu-deg">Class X — CBSE Board</div><div class="edu-org">Kendriya Vidyalaya Sec-12, Dwarka</div></div>
+      <div class="edu-yr">2020</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div id="contact-wrap">
+    <div class="cb-orb"></div>
+    <div class="cb-orb2"></div>
+    <div class="contact-inner">
+      <div>
+        <p class="eyebrow rv"><span class="ln"></span>Get in touch</p>
+        <h2 class="contact-big rv">Let's create something <em>meaningful</em> together</h2>
+        <p class="contact-info rv">I'm open to UI/UX internships, design collaborations, and freelance projects. If you're building something and need a designer who can also code — let's talk.</p>
+        <div class="contact-links rv">
+          <a href="mailto:kavita.ug22@nsut.ac.in" class="clink">
+            <span class="clink-icon">✉</span> kavita.ug22@nsut.ac.in
+          </a>
+          <a href="mailto:kavita977339@gmail.com" class="clink">
+            <span class="clink-icon">✉</span> kavita977339@gmail.com
+          </a>
+          <a href="https://github.com/kavita9404" target="_blank" rel="noopener" class="clink">
+            <span class="clink-icon">⌥</span> GitHub · kavita9404
+          </a>
+          <a href="https://www.linkedin.com/in/kavita-/" target="_blank" rel="noopener" class="clink">
+            <span class="clink-icon">◈</span> LinkedIn · kavita
+          </a>
+        </div>
+      </div>
+      <div class="contact-decoration rv">
+        <div class="cd-big">K.</div>
+        <div class="cd-tagline">
+          <p>Based in Noida, UP, India</p>
+          <div class="big">Available now</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Kavita</span>
+  <span>UI/UX Designer & Developer</span>
+  <span>NSUT · B.Tech CSE · 2026</span>
+</footer>
+
+<script>
+// CURSOR
+const co = document.getElementById('cur-o'), cd = document.getElementById('cur-d');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove', e=>{mx=e.clientX;my=e.clientY});
+(function loop(){
+  ox+=(mx-ox)*.12; oy+=(my-oy)*.12;
+  co.style.left=ox+'px'; co.style.top=oy+'px';
+  cd.style.left=mx+'px'; cd.style.top=my+'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button,.proj-item,.ach-card,.cert,.skill-cat,.pstep').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+// NAV SCROLL
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('sc',scrollY>60);
+});
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}});
+},{threshold:.07});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
